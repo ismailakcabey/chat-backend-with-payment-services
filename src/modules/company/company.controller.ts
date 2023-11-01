@@ -5,12 +5,19 @@ import {
     Get,
     Param,
     Delete,
-    Patch} from "@nestjs/common";
+    Patch,
+    UseGuards} from "@nestjs/common";
 import {CompanyService} from "./company.service";
 import { CreateCompanyDto, UpdateCompanyDto } from "./company.dto";
 import { Company } from "./company.model";
 import { QueryDto } from "../shared/dtos/query.dto";
+import { AuthGuard } from "../auth/auth.guard";
+import { Roles } from "../auth/roles.decorator";
+import { Role } from "../user/user.enum";
+import { RolesGuard } from "../auth/roles.guard";
 
+@UseGuards(AuthGuard,RolesGuard)
+@Roles(Role.ADMIN)
 @Controller('company')
 export class CompanyController {
     constructor(

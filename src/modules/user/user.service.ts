@@ -126,9 +126,10 @@ export class UserService implements IUser{
     }
     async findUser(query: QueryDto): Promise<{ status?: boolean; data?: User[]; message?: string; messageType?: number; count?: number; }> {
         try {
-            const { where, skip, limit } = query
+            const { where, skip, limit,include } = query
             const users = await this.userModel
                 .find(where)
+                .populate(include)
                 .limit(limit)
                 .skip(skip)
                 .exec();

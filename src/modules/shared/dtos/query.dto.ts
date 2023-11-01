@@ -1,4 +1,4 @@
-import { IsInt, IsObject, IsOptional } from "class-validator";
+import { IsArray, IsInt, IsObject, IsOptional } from "class-validator";
 
 export class QueryDto {
     @IsObject()
@@ -11,4 +11,8 @@ export class QueryDto {
     @IsInt()
     @IsOptional()
     readonly skip?: number;
+
+    @IsArray()
+    @IsOptional()
+    readonly include?: string[];
 }
