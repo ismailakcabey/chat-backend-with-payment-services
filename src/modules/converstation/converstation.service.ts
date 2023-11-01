@@ -92,10 +92,11 @@ export class ConverstationService implements IConverstation{
         }
     }
     async findConverstation(query: QueryDto): Promise<{ status?: boolean; data?: Converstation[]; message?: string; messageType?: number; count?:number}> {
-        const { where, skip, limit } = query
+        const { where, skip, limit,include } = query
         try {
             const companies = await this.converstationModel
                 .find(where)
+                .populate(include)
                 .limit(limit)
                 .skip(skip)
                 .exec();

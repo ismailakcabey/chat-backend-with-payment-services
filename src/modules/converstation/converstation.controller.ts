@@ -18,7 +18,7 @@ import { Role } from "../user/user.enum";
 import { RolesGuard } from "../auth/roles.guard";
 
 @UseGuards(AuthGuard, RolesGuard)
-@Roles(Role.ADMIN)
+@Roles(Role.ADMIN,Role.USER)
 @Controller('converstation')
 export class ConverstationController {
     constructor(

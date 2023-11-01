@@ -92,10 +92,11 @@ export class CompanyService implements ICompany{
         }
     }
     async findCompany(query: QueryDto): Promise<{ status?: boolean; data?: Company[]; message?: string; messageType?: number; count?:number}> {
-        const { where, skip, limit } = query
+        const { where, skip, limit,include } = query
         try {
             const companies = await this.companyModel
                 .find(where)
+                .populate(include)
                 .limit(limit)
                 .skip(skip)
                 .exec();
