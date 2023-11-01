@@ -28,9 +28,9 @@ export class CreateUserDto {
     @IsOptional()
     role: Role = Role.USER;
 
-    @IsString()
+    @IsMongoId()
     @IsOptional()
-    readonly companyId?: string;
+    readonly companyId?: mongoose.Schema.Types.ObjectId;
 }
 
 export class UpdateUserDto {
@@ -59,7 +59,7 @@ export class UpdateUserDto {
     @IsOptional()
     role: Role = Role.USER;
 
-    @IsString()
+    @IsMongoId()
     @IsOptional()
-    readonly companyId?: string;
+    readonly companyId?: mongoose.Schema.Types.ObjectId;
 }
