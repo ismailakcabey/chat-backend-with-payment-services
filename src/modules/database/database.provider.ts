@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import { CompanySchema } from '../company/company.model';
 import { UserSchema } from '../user/user.model';
+import { ConverstationSchema } from '../converstation/converstation.model';
 
 
 export const databaseProviders = [
@@ -19,6 +20,11 @@ export const databaseProviders = [
     {
         provide: 'UserModelToken',
         useFactory: (connection: Connection) => connection.model('User', UserSchema),
+        inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
+    },
+    {
+        provide: 'ConverstationModelToken',
+        useFactory: (connection: Connection) => connection.model('Converstation', ConverstationSchema),
         inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
     }
 ];

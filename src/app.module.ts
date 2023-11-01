@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ConverstationModule } from './modules/converstation/converstation.module';
 
 @Module({
   imports: [
@@ -15,16 +16,17 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     MongooseModule.forRootAsync({
       useFactory: () => ({
-          uri: process.env.MONGODB_URI
+        uri: process.env.MONGODB_URI
       }),
-  }),
+    }),
     CompanyModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    ConverstationModule
   ],
   controllers: [AppController],
   providers: [
     AppService,
   ],
 })
-export class AppModule {}
+export class AppModule { }
