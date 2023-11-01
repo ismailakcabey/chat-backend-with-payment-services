@@ -3,8 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CompanyModule } from './modules/company/company.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompanySchema } from './modules/company/company.model';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -16,9 +16,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           uri: process.env.MONGODB_URI
       }),
   }),
-    CompanyModule
+    CompanyModule,
+    UserModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+  ],
 })
 export class AppModule {}

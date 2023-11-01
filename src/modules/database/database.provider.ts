@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import { CompanySchema } from '../company/company.model';
+import { UserSchema } from '../user/user.model';
 
 
 export const databaseProviders = [
@@ -13,6 +14,11 @@ export const databaseProviders = [
     {
         provide: 'CompanyModelToken',
         useFactory: (connection: Connection) => connection.model('Company', CompanySchema),
+        inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
+    },
+    {
+        provide: 'UserModelToken',
+        useFactory: (connection: Connection) => connection.model('User', UserSchema),
         inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
     }
 ];

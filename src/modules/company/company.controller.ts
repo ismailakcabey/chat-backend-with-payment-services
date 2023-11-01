@@ -9,7 +9,6 @@ import {
 import {CompanyService} from "./company.service";
 import { CreateCompanyDto, UpdateCompanyDto } from "./company.dto";
 import { Company } from "./company.model";
-import { ValidationPipe } from "../validation/validation.pipe";
 import { QueryDto } from "../shared/dtos/query.dto";
 
 @Controller('company')
@@ -20,7 +19,7 @@ export class CompanyController {
 
     @Post()
     async createCompany(
-        @Body(new ValidationPipe()) company: CreateCompanyDto,
+        @Body() company: CreateCompanyDto,
     ): Promise<{
         status?:boolean,
         message?:string,
@@ -32,7 +31,7 @@ export class CompanyController {
 
     @Post('/find')
     async findCompany(
-        @Body(new ValidationPipe()) query: QueryDto,
+        @Body() query: QueryDto,
     ): Promise<{
         status?:boolean,
         message?:string,
@@ -58,7 +57,7 @@ export class CompanyController {
     @Patch(':id')
     async updateByIdCompany(
         @Param('id') id : string,
-        @Body(new ValidationPipe()) company: UpdateCompanyDto,
+        @Body() company: UpdateCompanyDto,
     ): Promise<{
         status?:boolean,
         message?:string,
