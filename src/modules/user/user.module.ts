@@ -4,6 +4,7 @@ import { databaseProviders } from "../database/database.provider";
 import { UserSchema } from "./user.model";
 import { UserService } from "./user.service";
 import { UserController } from "./user.controller";
+import { RedisCacheService } from "../cache/redis-cache.service";
 
 
 @Module({
@@ -15,7 +16,7 @@ import { UserController } from "./user.controller";
     ],
     providers: [
         UserService,
-        ...databaseProviders
+        ...databaseProviders,
     ]
 })
 
