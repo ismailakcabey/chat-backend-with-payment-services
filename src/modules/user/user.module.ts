@@ -5,6 +5,7 @@ import { UserSchema } from "./user.model";
 import { UserService } from "./user.service";
 import { UserController } from "./user.controller";
 import { RedisCacheService } from "../cache/redis-cache.service";
+import RestHelper from "../shared/rest/restHelper";
 
 
 @Module({
@@ -17,6 +18,7 @@ import { RedisCacheService } from "../cache/redis-cache.service";
     providers: [
         UserService,
         ...databaseProviders,
+        RestHelper
     ]
 })
 

@@ -5,6 +5,7 @@ import { CreateUserDto, UpdateUserDto } from "./user.dto";
 import { User } from "./user.model";
 import { Model } from "mongoose";
 import { RedisCacheService } from "../cache/redis-cache.service";
+import RestHelper from "../shared/rest/restHelper";
 const passwordHash = require('password-hash');
 
 @Injectable()
@@ -13,6 +14,7 @@ export class UserService implements IUser{
     constructor(
         @Inject('UserModelToken')
         private readonly userModel: Model<User>,
+        private readonly restHelper: RestHelper
     ){}
 
     async createUser(createUser: CreateUserDto): Promise<{ status?: boolean; data?: User; message?: string; messageType?: number; }> {
