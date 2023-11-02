@@ -19,6 +19,7 @@ import { EmailService } from "../shared/email/email.service";
     providers: [
         UserService,
         ...databaseProviders,
+        EmailService
     ]
 })
 

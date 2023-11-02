@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConverstationModule } from './modules/converstation/converstation.module';
 import { RedisCacheModule } from './modules/cache/redis-cache.module';
+import { PredictModule } from './modules/predict/predict.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { RedisCacheModule } from './modules/cache/redis-cache.module';
     UserModule,
     AuthModule,
     ConverstationModule,
-    RedisCacheModule
+    RedisCacheModule,
+    PredictModule
   ],
   controllers: [AppController],
   providers: [

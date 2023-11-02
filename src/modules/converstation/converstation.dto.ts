@@ -5,9 +5,6 @@ export class CreateConverstationDto {
     @IsString()
     readonly name: string;
 
-    @IsMongoId()
-    readonly userId: mongoose.Schema.Types.ObjectId
-
 }
 
 export class UpdateConverstationDto {

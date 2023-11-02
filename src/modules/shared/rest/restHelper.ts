@@ -41,7 +41,8 @@ export default class RestHelper{
     headers?: Record<string, any>
   ) {
     const config = this.createAxiosConfig("POST",url, headers, data);
-    return axios.request({ ...config, url });
+    const result = await axios.request({ ...config, url })
+    return result;
   }
 
   async put(

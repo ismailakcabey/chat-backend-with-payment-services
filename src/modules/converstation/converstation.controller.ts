@@ -6,7 +6,8 @@ import {
     Param,
     Delete,
     Patch,
-    UseGuards
+    UseGuards,
+    Req
 } from "@nestjs/common";
 import { ConverstationService } from "./converstation.service";
 import { CreateConverstationDto, UpdateConverstationDto } from "./converstation.dto";
@@ -28,12 +29,18 @@ export class ConverstationController {
     @Post()
     async createConverstation(
         @Body() converstation: CreateConverstationDto,
+        @Req() request: Request
     ): Promise<{
         status?: boolean,
         message?: string,
         messageType?: number,
         data?: Converstation
     }> {
+        converstation = {
+            ...converstation,
+            //@ts-ignore
+            userId: request?.user?.id
+        }
         return await this.converstationService.createConverstation(converstation)
     }
 
