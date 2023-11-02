@@ -53,7 +53,6 @@ export class AuthService implements IAuth{
     }
     async verifyUser(id: string): Promise<{ status?: boolean; data?: User; message?: string; messageType?: number; }> {
         const user = await this.userModel.findByIdAndUpdate(id, {isActive:true})
-        console.log(user ,'verisi',id)
         if(user){
             return{
                 status:true,

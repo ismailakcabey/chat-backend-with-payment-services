@@ -4,6 +4,7 @@ import { CompanySchema } from '../company/company.model';
 import { UserSchema } from '../user/user.model';
 import { ConverstationSchema } from '../converstation/converstation.model';
 import { PredictSchema } from '../predict/predict.model';
+import { PaymentSchema } from '../payment/payment.model';
 
 
 export const databaseProviders = [
@@ -31,6 +32,11 @@ export const databaseProviders = [
     {
         provide: 'PredictModelToken',
         useFactory: (connection: Connection) => connection.model('Predict', PredictSchema),
+        inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
+    },
+    {
+        provide: 'PaymentModelToken',
+        useFactory: (connection: Connection) => connection.model('Payment', PaymentSchema),
         inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
     }
 ];

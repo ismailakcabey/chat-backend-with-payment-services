@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { Language, Role } from "./user.enum";
+import { AccountType } from "../shared/enums/account.type";
 
 export const UserSchema = new mongoose.Schema({
     // _id otomatik olarak ObjectID olarak oluşturulacak
@@ -36,6 +37,12 @@ export const UserSchema = new mongoose.Schema({
         required: false,
         default: Role.USER // Varsayılan değeri burada belirtin
     },
+    accountType: {
+        type: String,
+        enum: Object.values(AccountType), // Enum değerlerini burada belirtin
+        required: false,
+        default: AccountType.MONTH // Varsayılan değeri burada belirtin
+    },
     isPayment: {
         type: Boolean,
         required: false,
@@ -68,6 +75,7 @@ export interface User extends mongoose.Document {
     isKvkk: boolean;
     language:Language,
     role:Role,
+    accountTyoe:AccountType,
     isPayment:boolean,
     isActive:boolean,
     companyId: mongoose.Types.ObjectId | null;

@@ -10,6 +10,7 @@ async function bootstrap() {
       whitelist: true, // Sadece DTO alanlarına izin ver
     })
   );
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

@@ -38,7 +38,6 @@ export class AuthGuard implements CanActivate {
         .limit(1)
         .skip(0)
         .exec();
-        //console.log(user,'user verisi bu',payload?.id)
       if (user == null || user == undefined || user.length === 0) {
         throw new UnauthorizedException('user not found');
       }
