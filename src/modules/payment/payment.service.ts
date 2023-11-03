@@ -4,12 +4,15 @@ import { QueryDto } from '../shared/dtos/query.dto';
 import { PaymentCartInfoDto } from './payment.dto';
 import { Payment } from './payment.model';
 import { Model } from 'mongoose';
+import { User } from '../user/user.model';
 
 @Injectable()
 export class PaymentService implements IPayment {
   constructor(
     @Inject('PaymentModelToken')
     private readonly paymentModel: Model<Payment>,
+    @Inject('UserModelToken')
+    private readonly userModel: Model<User>,
   ) {}
 
   async getPayment(
@@ -32,6 +35,9 @@ export class PaymentService implements IPayment {
         console.log('ödeme isteği atılıyor');
       }, 1000);
       const result = await addPayment.save();
+      if(payment?.status){
+        const updateUser = await this.userModel.findByIdAndUpdate(userId,{isPayment:true,isPaymentDate:new Date,accountType:createPayment.paymentType})
+      }
       return {
         status: true,
         data: result,

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CompanyModule } from './modules/company/company.module';
@@ -11,6 +11,7 @@ import { ConverstationModule } from './modules/converstation/converstation.modul
 import { RedisCacheModule } from './modules/cache/redis-cache.module';
 import { PredictModule } from './modules/predict/predict.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { MainMiddleware } from './modules/middleware/main.middleware';
 
 
 @Module({
@@ -36,4 +37,8 @@ import { PaymentModule } from './modules/payment/payment.module';
     AppService,
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MainMiddleware).forRoutes('*')
+  }
+}

@@ -48,6 +48,10 @@ export const UserSchema = new mongoose.Schema({
         required: false,
         default:false
     },
+    isPaymentDate: {
+        type: Date,
+        required: false,
+    },
     isActive: {
         type: Boolean,
         required: false,
@@ -75,8 +79,9 @@ export interface User extends mongoose.Document {
     isKvkk: boolean;
     language:Language,
     role:Role,
-    accountTyoe:AccountType,
+    accountType:AccountType,
     isPayment:boolean,
+    isPaymentDate:Date,
     isActive:boolean,
     companyId: mongoose.Types.ObjectId | null;
 }
