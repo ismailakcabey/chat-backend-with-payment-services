@@ -20,7 +20,7 @@ export class PredictService implements IPredict{
             const addPredict = new this.precitModel(createPredict);
             if (addPredict) {
                 const chatGptAnser = await this.restHelperService.post('https://api.openai.com/v1/chat/completions',{
-                    "model":"gpt-3.5-turbo",
+                    "model":"gpt-4",
                     "messages":[
                         {
                             "role":"user",
@@ -28,10 +28,10 @@ export class PredictService implements IPredict{
                         }
                     ],
                     "temperature":0.7,
-                    "max_tokens": 256,
                 },{
                     "Authorization": 'Bearer '+process.env.CHAT_GPT_API_KEY,
                 })
+                console.log(chatGptAnser,'yanit burada')
                 addPredict.answer = chatGptAnser?.data?.choices[0]?.message?.content
                 const result = await addPredict.save();
                 return {
