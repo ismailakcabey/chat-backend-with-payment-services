@@ -8,7 +8,7 @@ async function bootstrap() {
     new ValidationPipe({
       forbidNonWhitelisted: true, // DTO dışında kalan alanlar için hata fırlat
       whitelist: true, // Sadece DTO alanlarına izin ver
-    })
+    }),
   );
   app.enableCors();
   await app.listen(3000);

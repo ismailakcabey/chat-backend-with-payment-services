@@ -34,12 +34,12 @@ export class PaymentCron {
       };
       console.log(query);
       const users = await this.userModel.find(query);
-      users?.map(async (user: User, key: number) => {
-        await this.userModel.findByIdAndUpdate(user?._id, {
-          isPayment: false,
-          isActive: false,
-        });
-      });
+      // users?.map(async (user: User, key: number) => {
+      //   await this.userModel.findByIdAndUpdate(user?._id, {
+      //     isPayment: false,
+      //     isActive: false,
+      //   });
+      // });
     } catch (error) {
       console.log(error);
     }
