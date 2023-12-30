@@ -34,10 +34,17 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = payload;
       const user = await this.userModel
-        .find({_id:payload?.id, isActive:true})
+        .find({ _id: payload?.id, isActive: true })
         .limit(1)
         .skip(0)
         .exec();
+      if (
+        !user[0]?.isPayment &&
+        (request?.route?.path === '/auth/login' ||
+          request?.route?.path === '/user')
+      ) {
+        throw new UnauthorizedException('user not payment found');
+      }
       if (user == null || user == undefined || user.length === 0) {
         throw new UnauthorizedException('user not found');
       }
