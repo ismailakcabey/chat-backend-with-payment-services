@@ -103,8 +103,8 @@ export class PaymentService implements IPayment {
           {
             id: createPayment?.paymentType,
             name: createPayment?.paymentType,
-            category1: 'Collectibles',
-            category2: 'Accessories',
+            category1: 'AI',
+            category2: 'ai',
             itemType: Iyzipay.BASKET_ITEM_TYPE.PHYSICAL,
             price:
               createPayment?.paymentType == AccountType?.MONTH
@@ -116,7 +116,6 @@ export class PaymentService implements IPayment {
         ],
       };
       const data = await this.createPayment(request);
-      console.log(data?.status, 'verisi');
       if (data?.status == 'success') {
         payment.status = true;
       }
