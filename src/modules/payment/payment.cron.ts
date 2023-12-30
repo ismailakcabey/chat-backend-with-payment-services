@@ -18,9 +18,9 @@ export class PaymentCron {
     try {
       const currentDate = new Date();
       const minPaymentDate = new Date();
-      minPaymentDate.setDate(currentDate.getDate() - 28);
+      minPaymentDate.setDate(currentDate.getDate() - 30);
       const maxPaymentDate = new Date();
-      maxPaymentDate.setDate(currentDate.getDate() - 32);
+      maxPaymentDate.setDate(currentDate.getDate() - 31);
       console.log('minPaymentDate', minPaymentDate);
       console.log('maxPaymentDate', maxPaymentDate);
       let query = {
@@ -37,7 +37,7 @@ export class PaymentCron {
       users?.map(async (user: User, key: number) => {
         await this.userModel.findByIdAndUpdate(user?._id, {
           isPayment: false,
-          isActive: false,
+          isActive: true,
         });
       });
     } catch (error) {
@@ -53,7 +53,7 @@ export class PaymentCron {
       const minPaymentDate = new Date();
       minPaymentDate.setDate(currentDate.getDate() - 364);
       const maxPaymentDate = new Date();
-      maxPaymentDate.setDate(currentDate.getDate() - 366);
+      maxPaymentDate.setDate(currentDate.getDate() - 365);
       console.log('minPaymentDate', minPaymentDate);
       console.log('maxPaymentDate', maxPaymentDate);
       let query = {
@@ -70,7 +70,40 @@ export class PaymentCron {
       users?.map(async (user: User, key: number) => {
         await this.userModel.findByIdAndUpdate(user?._id, {
           isPayment: false,
-          isActive: false,
+          isActive: true,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_7PM)
+  async handlePaymentCron3Month() {
+    console.log('cron started');
+    try {
+      const currentDate = new Date();
+      const minPaymentDate = new Date();
+      minPaymentDate.setDate(currentDate.getDate() - 90);
+      const maxPaymentDate = new Date();
+      maxPaymentDate.setDate(currentDate.getDate() - 91);
+      console.log('minPaymentDate', minPaymentDate);
+      console.log('maxPaymentDate', maxPaymentDate);
+      let query = {
+        isActive: true,
+        isPayment: true,
+        accountType: AccountType.THREEMONTH,
+        isPaymentDate: {
+          $gte: minPaymentDate,
+          $lte: maxPaymentDate,
+        },
+      };
+      console.log(query);
+      const users = await this.userModel.find(query);
+      users?.map(async (user: User, key: number) => {
+        await this.userModel.findByIdAndUpdate(user?._id, {
+          isPayment: false,
+          isActive: true,
         });
       });
     } catch (error) {

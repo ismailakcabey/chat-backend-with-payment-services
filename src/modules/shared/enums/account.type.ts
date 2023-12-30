@@ -1,5 +1,5 @@
-
-export enum AccountType{
-    MONTH = "month",
-    YEAR = "year",
+export enum AccountType {
+  MONTH = 'month',
+  YEAR = 'year',
+  THREEMONTH = 'threemonth',
 }
