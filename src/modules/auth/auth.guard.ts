@@ -39,11 +39,15 @@ export class AuthGuard implements CanActivate {
         .skip(0)
         .exec();
       if (
-        !user[0]?.isPayment &&
-        (request?.route?.path === '/auth/login' ||
-          request?.route?.path === '/user')
+        !(
+          request?.route?.path === '/auth/login' ||
+          request?.route?.path === '/user' ||
+          request?.route?.path === '/payment/get'
+        )
       ) {
-        throw new UnauthorizedException('user not payment found');
+        if (!user[0]?.isPayment) {
+          throw new UnauthorizedException('user not payment found');
+        }
       }
       if (user == null || user == undefined || user.length === 0) {
         throw new UnauthorizedException('user not found');

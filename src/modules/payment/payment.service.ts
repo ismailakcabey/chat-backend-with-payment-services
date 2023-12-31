@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { IPayment } from './payment.interface';
 import { QueryDto } from '../shared/dtos/query.dto';
-import { PaymentCartInfoDto } from './payment.dto';
+import { PaymentCartInfoDto, RefundCartInfoDto } from './payment.dto';
 import { Payment } from './payment.model';
 import { Model } from 'mongoose';
 import { User } from '../user/user.model';
@@ -28,19 +28,28 @@ export class PaymentService implements IPayment {
     messageType?: number;
   }> {
     try {
-      const user = await this.userModel.findById(userId);
+      console.log('userId: ' + userId);
+      const user = await this.userModel
+        .find({ _id: userId })
+        .limit(1)
+        .skip(0)
+        .exec();
       let payment = {
         userId: userId,
         status: false,
         accountType: createPayment.paymentType,
+        paymentTransactionId: '',
+        conversationId: '',
       };
+
       const nameParts = createPayment.cartHolderName.split(' ');
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ');
       const date = new Date();
-      var request = {
+      const request = {
         locale: Iyzipay.LOCALE.TR,
-        conversationId: user?.id + date.toISOString(),
+        conversationId:
+          userId + '-' + date.getFullYear() + '-' + date.getMonth(),
         price:
           createPayment?.paymentType == AccountType?.MONTH
             ? '20'
@@ -54,7 +63,7 @@ export class PaymentService implements IPayment {
             ? '60'
             : '50',
         currency:
-          user?.language == Language.TR
+          user[0]?.language == Language.TR
             ? Iyzipay.CURRENCY.TRY
             : Iyzipay.CURRENCY.USD,
         installment: '1',
@@ -115,8 +124,12 @@ export class PaymentService implements IPayment {
           },
         ],
       };
+      console.log(request);
       const data = await this.createPayment(request);
       if (data?.status == 'success') {
+        payment.paymentTransactionId =
+          data.itemTransactions[0].paymentTransactionId;
+        payment.conversationId = request.conversationId;
         payment.status = true;
       }
       const addPayment = await new this.paymentModel(payment);
@@ -151,7 +164,7 @@ export class PaymentService implements IPayment {
     }
   }
   async returnPayment(
-    createPayment: PaymentCartInfoDto,
+    createPayment: RefundCartInfoDto,
     userId: string,
   ): Promise<{
     status?: boolean;
@@ -160,25 +173,41 @@ export class PaymentService implements IPayment {
     messageType?: number;
   }> {
     try {
-      setTimeout(() => {
-        console.log('ödeme isteği atılıyor');
-      }, 1000);
-      /**
-       * müşteriye parasını geri iade edicez
-       */
+      const paymentData = await this.paymentModel
+        .find({ conversationId: createPayment.conversationId })
+        .limit(1)
+        .skip(0)
+        .exec();
+      const request = {
+        locale: Iyzipay.LOCALE.TR,
+        conversationId: createPayment.conversationId,
+        paymentTransactionId: paymentData[0]?.paymentTransactionId,
+        price:
+          paymentData[0]?.accountType == AccountType?.MONTH
+            ? '20'
+            : paymentData[0]?.accountType == AccountType?.YEAR
+            ? '60'
+            : '50',
+        currency: paymentData[0]?.currency.toUpperCase(),
+        ip: '85.34.78.112',
+      };
+      const data = await this.returnCreatePayment(request);
       let payment = {
         userId: userId,
-        status: true,
-        accountType: createPayment.paymentType,
+        status: false,
+        accountType: paymentData[0].accountType,
         isReturned: true,
       };
+      if (data.success === 'success') {
+        payment.status = true;
+      }
       const addPayment = await new this.paymentModel(payment);
       const result = await addPayment.save();
       if (payment?.status) {
         const updateUser = await this.userModel.findByIdAndUpdate(userId, {
           isPayment: false,
           isPaymentDate: new Date(),
-          accountType: createPayment.paymentType,
+          accountType: paymentData[0].accountType,
         });
         return {
           status: true,
@@ -190,7 +219,7 @@ export class PaymentService implements IPayment {
         return {
           status: false,
           data: result,
-          message: 'failed to send payment',
+          message: 'failed to send payment' + data.errorMessage,
           messageType: 0,
         };
       }
@@ -213,6 +242,25 @@ export class PaymentService implements IPayment {
       });
 
       iyzipay.payment.create(request, (err, result) => {
+        if (result) {
+          Logger.log(result);
+          resolve(result);
+        } else {
+          Logger.error(err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  async returnCreatePayment(request): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const iyzipay = new Iyzipay({
+        apiKey: process.env.API_KEY,
+        secretKey: process.env.SECRET_KEY,
+        uri: 'https://sandbox-api.iyzipay.com',
+      });
+      iyzipay.refund.create(request, (err, result) => {
         if (result) {
           Logger.log(result);
           resolve(result);

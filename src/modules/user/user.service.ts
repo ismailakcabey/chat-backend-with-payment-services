@@ -13,12 +13,10 @@ export class UserService implements IUser {
   constructor(
     @Inject('UserModelToken')
     private readonly userModel: Model<User>,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
   ) {}
 
-  async createUser(
-    createUser: CreateUserDto,
-  ): Promise<{
+  async createUser(createUser: CreateUserDto): Promise<{
     status?: boolean;
     data?: User;
     message?: string;
@@ -40,8 +38,14 @@ export class UserService implements IUser {
         createUser.password = passwordHash.generate(createUser.password);
         const addUser = new this.userModel(createUser);
         const result = await addUser.save();
-        const verifyEmail = verifyMail(result?.id)
-        const sendEmail = await this.emailService.emailSend(verifyEmail,addUser?.email,addUser?.name,'Verify Email','Please Email Verify')
+        const verifyEmail = verifyMail(result?.id);
+        const sendEmail = await this.emailService.emailSend(
+          verifyEmail,
+          addUser?.email,
+          addUser?.name,
+          'Verify Email',
+          'Please Email Verify',
+        );
         return {
           status: true,
           data: result,
@@ -83,9 +87,7 @@ export class UserService implements IUser {
       };
     }
   }
-  async verifyUser(
-    id: string,
-  ): Promise<{
+  async verifyUser(id: string): Promise<{
     status?: boolean;
     data?: User;
     message?: string;
@@ -107,9 +109,7 @@ export class UserService implements IUser {
       };
     }
   }
-  async deleteUser(
-    id: string,
-  ): Promise<{
+  async deleteUser(id: string): Promise<{
     status?: boolean;
     data?: User;
     message?: string;
@@ -131,9 +131,7 @@ export class UserService implements IUser {
       };
     }
   }
-  async findByIdUser(
-    id: string,
-  ): Promise<{
+  async findByIdUser(id: string): Promise<{
     status?: boolean;
     data?: User;
     message?: string;
@@ -163,9 +161,7 @@ export class UserService implements IUser {
       };
     }
   }
-  async findUser(
-    query: QueryDto,
-  ): Promise<{
+  async findUser(query: QueryDto): Promise<{
     status?: boolean;
     data?: User[];
     message?: string;

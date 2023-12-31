@@ -21,3 +21,8 @@ export class PaymentCartInfoDto {
   @IsEnum(AccountType)
   readonly paymentType;
 }
+
+export class RefundCartInfoDto {
+  @IsString()
+  conversationId: string;
+}
