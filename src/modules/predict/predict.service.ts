@@ -139,11 +139,12 @@ export class PredictService implements IPredict {
     messageType?: number;
     count?: number;
   }> {
-    const { where, skip, limit, include } = query;
+    const { where, skip, sort, limit, include } = query;
     try {
       const predicts = await this.precitModel
         .find(where)
         .populate(include)
+        .sort(sort)
         .limit(limit)
         .skip(skip)
         .exec();

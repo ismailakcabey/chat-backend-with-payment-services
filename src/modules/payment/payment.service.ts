@@ -280,10 +280,11 @@ export class PaymentService implements IPayment {
     count?: number;
   }> {
     try {
-      const { where, skip, limit, include } = query;
+      const { where, sort, skip, limit, include } = query;
       const payments = await this.paymentModel
         .find(where)
         .populate(include)
+        .sort(sort)
         .limit(limit)
         .skip(skip)
         .exec();
