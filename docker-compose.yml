@@ -1,9 +1,0 @@
-version: '3.8'
-services:
-  chatgpt-backend:
-    container_name: chatgpt-backend
-    image: ismail/chatgpt-backend
-    build:
-      context: .
-    ports:
-      - 3010:80
