@@ -19,6 +19,7 @@ import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from './user.enum';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
