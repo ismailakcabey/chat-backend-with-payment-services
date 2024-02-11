@@ -7,6 +7,8 @@ import {
   Delete,
   Patch,
   UseGuards,
+  Res,
+  Sse,
 } from '@nestjs/common';
 import { QueryDto } from '../shared/dtos/query.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -16,13 +18,19 @@ import { RolesGuard } from '../auth/roles.guard';
 import { PredictService } from './predict.service';
 import { CreatePredictDto } from './predict.dto';
 import { Predict } from './predict.model';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { Readable } from 'stream';
+import { Observable, interval, map, take, tap } from 'rxjs';
+import { GetDataGateWay } from './stream.gateway';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.ADMIN, Role.USER)
 @Controller('predict')
 export class PredictController {
-  constructor(private readonly predictService: PredictService) {}
+  constructor(
+    private readonly predictService: PredictService,
+    private readonly gatewayservice: GetDataGateWay,
+  ) {}
 
   @Post()
   async createPredict(@Body() predict: CreatePredictDto): Promise<{
@@ -32,6 +40,16 @@ export class PredictController {
     data?: Predict;
   }> {
     return await this.predictService.createPredict(predict);
+  }
+
+  @Post('/streamapi')
+  async createPredictStreamApi(@Body() predict: CreatePredictDto): Promise<{
+    status?: boolean;
+    message?: string;
+    messageType?: number;
+    data?: Predict;
+  }> {
+    return await this.predictService.createPredictStreamApi(predict);
   }
 
   @Post('/find')
