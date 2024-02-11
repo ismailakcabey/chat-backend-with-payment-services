@@ -112,7 +112,7 @@ export class PredictService implements IPredict {
         const response = await axios.post(
           'https://api.openai.com/v1/chat/completions',
           {
-            model: 'gpt-4',
+            model: 'gpt-3.5-turbo',
             messages: oldMessageArray,
             stream: true,
             temperature: 0.7,
@@ -125,35 +125,50 @@ export class PredictService implements IPredict {
           },
         );
         const stream = response.data as unknown as IncomingMessage;
+        let answer = '';
         stream.on('data', (chunk: Buffer) => {
           const payloads = chunk.toString().split('\n\n');
           for (const payload of payloads) {
             if (payload.includes('[DONE]')) return;
             if (payload.startsWith('data:')) {
-              const data = payload; //JSON.parse(payload.replace('data: ', ''));
               try {
-                const chunk: undefined | string = payload;
-                if (chunk) {
-                  this.gatewayservice.onNewMessage({
-                    sender: `${createPredict?.converstationId}`,
-                    content: chunk,
-                  });
+                const data = payload; //JSON.parse(payload.replace('data: ', ''));
+                const dataPayload = JSON.parse(payload.replace('data: ', ''));
+                if (dataPayload?.choices[0]?.delta?.content !== undefined) {
+                  answer =
+                    answer + dataPayload?.choices[0]?.delta?.content || '';
+                } else {
                 }
-              } catch (error) {
-                console.log(`Error with JSON.parse and ${payload}.\n${error}`);
-              }
+                try {
+                  const chunk: undefined | string = payload;
+                  if (chunk) {
+                    this.gatewayservice.onNewMessage({
+                      sender: `${createPredict?.converstationId}`,
+                      content: dataPayload?.choices[0]?.delta?.content,
+                    });
+                  }
+                } catch (error) {
+                  console.log(
+                    `Error with JSON.parse and ${payload}.\n${error}`,
+                  );
+                }
+              } catch (error) {}
             }
           }
         });
-
-        stream.on('end', () => {
+        stream.on('end', async () => {
           this.gatewayservice.onNewMessage({
             sender: `${createPredict?.converstationId}`,
             content: 'finish response',
           });
+          addPredict.answer = answer;
+          const result = await addPredict.save();
           setTimeout(() => {
             return {
-              data: 'success',
+              status: true,
+              data: result,
+              message: 'success to add predict',
+              messageType: 0,
             };
           }, 0);
         });
@@ -166,7 +181,10 @@ export class PredictService implements IPredict {
         });
       }
       return {
-        data: 'success',
+        status: true,
+        data: {},
+        message: 'success to add predict',
+        messageType: 0,
       };
     } catch (error) {
       console.log(error);
