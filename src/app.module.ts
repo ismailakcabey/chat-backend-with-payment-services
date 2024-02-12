@@ -12,7 +12,9 @@ import { RedisCacheModule } from './modules/cache/redis-cache.module';
 import { PredictModule } from './modules/predict/predict.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { MainMiddleware } from './modules/middleware/main.middleware';
-
+import { ProductModule } from './modules/product/product.module';
+import { PaymentPlanModule } from './modules/paymentPlan/paymentPlan.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { MainMiddleware } from './modules/middleware/main.middleware';
     }),
     MongooseModule.forRootAsync({
       useFactory: () => ({
-        uri: process.env.MONGODB_URI
+        uri: process.env.MONGODB_URI,
       }),
     }),
     CompanyModule,
@@ -30,15 +32,16 @@ import { MainMiddleware } from './modules/middleware/main.middleware';
     ConverstationModule,
     RedisCacheModule,
     PredictModule,
-    PaymentModule
+    PaymentModule,
+    ProductModule,
+    PaymentPlanModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-  ],
+  providers: [AppService],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(MainMiddleware).forRoutes('*')
+    consumer.apply(MainMiddleware).forRoutes('*');
   }
 }
