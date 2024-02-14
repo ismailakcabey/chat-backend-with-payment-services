@@ -8,6 +8,7 @@ import { PaymentSchema } from '../payment/payment.model';
 import { ProductSchema } from '../product/product.model';
 import { PaymentPlanSchema } from '../paymentPlan/paymentPlan.model';
 import { SubscriptionSchema } from '../subscription/subscription.model';
+import { PaymentInformationSchema } from '../subscription/paymentInformation..model';
 
 export const databaseProviders = [
   {
@@ -62,6 +63,12 @@ export const databaseProviders = [
     provide: 'SubscriptionModelToken',
     useFactory: (connection: Connection) =>
       connection.model('Subscription', SubscriptionSchema),
+    inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
+  },
+  {
+    provide: 'PaymentInformationModelToken',
+    useFactory: (connection: Connection) =>
+      connection.model('PaymentInformation', PaymentInformationSchema),
     inject: ['DATABASE_CONNECTION'], // 'DATABASE_CONNECTION' ile eşleşmeli
   },
 ];

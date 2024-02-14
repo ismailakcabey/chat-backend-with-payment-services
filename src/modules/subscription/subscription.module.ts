@@ -5,11 +5,13 @@ import { SubscriptionSchema } from './subscription.model';
 import { SubscriptionController } from './subscription.controller';
 import { SubscriptionService } from './subscription.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PaymentInformationSchema } from './paymentInformation..model';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'Subscription', schema: SubscriptionSchema },
+      { name: 'PaymentInformation', schema: PaymentInformationSchema },
     ]),
     ScheduleModule.forRoot(),
   ],

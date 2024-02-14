@@ -6,6 +6,7 @@ import { CreateSubscriptionDto, CancelSubscription } from './subscription.dto';
 import { User } from '../user/user.model';
 import { QueryDto } from '../shared/dtos/query.dto';
 import { AccountType } from '../shared/enums/account.type';
+import { PaymentInformation } from './paymentInformation..model';
 var Iyzipay = require('iyzipay');
 
 @Injectable()
@@ -15,6 +16,8 @@ export class SubscriptionService implements ISubscription {
     private readonly subscriptionModel: Model<Subscription>,
     @Inject('UserModelToken')
     private readonly userModel: Model<User>,
+    @Inject('PaymentInformationModelToken')
+    private readonly paymentInformation: Model<PaymentInformation>,
   ) {}
   async getSubscription(
     createSubscription: CreateSubscriptionDto,
@@ -76,6 +79,7 @@ export class SubscriptionService implements ISubscription {
       addSubs.activateStatus = true;
       const updateUser = await this.userModel.findByIdAndUpdate(userId, {
         isPayment: true,
+        customerReferenceCode: data?.data?.customerReferenceCode,
         isPaymentDate: new Date(),
         accountType: createSubscription.paymentType,
       });
@@ -193,6 +197,23 @@ export class SubscriptionService implements ISubscription {
         status: false,
         message: 'failed to find subs',
         messageType: 0,
+      };
+    }
+  }
+
+  async informationiyzico(information: any): Promise<any> {
+    try {
+      const addPaymentInformation = new this.paymentInformation(information);
+      const result = await addPaymentInformation.save();
+      return {
+        status: true,
+        data: result,
+        message: 'success to save information',
+      };
+    } catch (error) {
+      return {
+        status: false,
+        message: 'failed to save information',
       };
     }
   }

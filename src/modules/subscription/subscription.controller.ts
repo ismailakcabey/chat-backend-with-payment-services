@@ -41,6 +41,11 @@ export class SubscriptionController {
     return await this.subscriptionService.getSubscription(subscription, userId);
   }
 
+  @Post('informationiyzico')
+  async getInformationiyzico(@Body() information): Promise<any> {
+    return await this.subscriptionService.informationiyzico(information);
+  }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Post('refund')
