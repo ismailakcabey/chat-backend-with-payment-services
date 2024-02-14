@@ -88,6 +88,10 @@ export const SubscriptionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    identityNumber: {
+      type: String,
+      required: true,
+    },
     paymentType: {
       type: String,
       enum: Object.values(AccountType), // Enum değerlerini burada belirtin
@@ -127,4 +131,5 @@ export interface Subscription extends mongoose.Document {
   subsReferenceCode: string;
   customerReferenceCode: string;
   paymentType: AccountType;
+  identityNumber: string;
 }

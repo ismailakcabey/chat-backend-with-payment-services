@@ -49,6 +49,7 @@ export class SubscriptionService implements ISubscription {
         surname: createSubscription?.surname,
         email: user[0]?.email,
         gsmNumber: createSubscription?.gsmNumber,
+        identityNumber: createSubscription?.identityNumber,
         billingAddress: {
           contactName: createSubscription?.name,
           city: createSubscription?.city,
@@ -70,8 +71,8 @@ export class SubscriptionService implements ISubscription {
     const data = await this.requestSubs(request);
     addSubs.response = JSON.stringify(data);
     if (data?.status == 'success') {
-      addSubs.customerReferenceCode = data.customerReferenceCode;
-      addSubs.subsReferenceCode = data?.referenceCode;
+      addSubs.customerReferenceCode = data?.data?.customerReferenceCode;
+      addSubs.subsReferenceCode = data?.data?.referenceCode;
       addSubs.activateStatus = true;
       const updateUser = await this.userModel.findByIdAndUpdate(userId, {
         isPayment: true,

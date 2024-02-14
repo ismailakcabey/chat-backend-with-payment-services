@@ -26,11 +26,10 @@ export class ProductService implements IProduct {
         name: createProduct?.name,
         description: createProduct?.description,
       };
-
       const data = await this.createSubsProduct(request);
       addProduct.response = JSON.stringify(data);
       if (data?.status == 'success') {
-        addProduct.productReferenceCode = data?.productReferenceCode;
+        addProduct.productReferenceCode = data?.data?.referenceCode;
         const result = await addProduct.save();
         return {
           status: true,
@@ -42,7 +41,7 @@ export class ProductService implements IProduct {
       return {
         status: true,
         data: undefined,
-        message: 'success to add product',
+        message: 'failed to add product',
         messageType: 0,
       };
     } catch (error) {
@@ -55,7 +54,6 @@ export class ProductService implements IProduct {
   }
   async createSubsProduct(request): Promise<any> {
     return new Promise((resolve, reject) => {
-      console.log(process.env.API_KEY, 'burada');
       const iyzipay = new Iyzipay({
         apiKey: process.env.API_KEY,
         secretKey: process.env.SECRET_KEY,

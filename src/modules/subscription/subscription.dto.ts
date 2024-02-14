@@ -9,6 +9,9 @@ export class CreateSubscriptionDto {
   readonly pricingPlanReferenceCode?: string;
 
   @IsString()
+  readonly identityNumber?: string;
+
+  @IsString()
   readonly cardHolderName?: string;
 
   @IsString()

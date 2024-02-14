@@ -22,6 +22,7 @@ export class PaymentPlanService implements IPaymentPlan {
       const addPaymentPlan = new this.paymentPlanModel(createPaymentPlan);
       const request = {
         locale: Iyzipay.LOCALE.EN,
+        productReferenceCode: createPaymentPlan?.productReferenceCode,
         conversationId: `${createPaymentPlan?.name}-${createPaymentPlan?.description}-${createPaymentPlan?.price}`,
         price: createPaymentPlan?.price,
         name: createPaymentPlan?.name,
@@ -35,7 +36,7 @@ export class PaymentPlanService implements IPaymentPlan {
       const data = await this.createSubsPlan(request);
       addPaymentPlan.response = JSON.stringify(data);
       if (data?.status == 'success') {
-        addPaymentPlan.paymentPlanReferenceCode = data?.referenceCode;
+        addPaymentPlan.paymentPlanReferenceCode = data?.data?.referenceCode;
         const result = await addPaymentPlan.save();
         return {
           status: true,
@@ -45,9 +46,9 @@ export class PaymentPlanService implements IPaymentPlan {
         };
       }
       return {
-        status: true,
+        status: false,
         data: undefined,
-        message: 'success to add paymentPlan',
+        message: 'failed to add paymentPlan',
         messageType: 0,
       };
     } catch (error) {
