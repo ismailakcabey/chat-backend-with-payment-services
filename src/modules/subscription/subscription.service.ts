@@ -203,7 +203,8 @@ export class SubscriptionService implements ISubscription {
 
   async informationiyzico(information: any): Promise<any> {
     try {
-      const addPaymentInformation = new this.paymentInformation(information);
+      const addPaymentInformation = new this.paymentInformation();
+      addPaymentInformation.response = JSON.stringify(information);
       const result = await addPaymentInformation.save();
       return {
         status: true,
@@ -213,7 +214,7 @@ export class SubscriptionService implements ISubscription {
     } catch (error) {
       return {
         status: false,
-        message: 'failed to save information',
+        message: 'failed to save information' + error.message,
       };
     }
   }

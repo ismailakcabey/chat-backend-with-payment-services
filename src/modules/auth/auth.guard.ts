@@ -42,7 +42,8 @@ export class AuthGuard implements CanActivate {
         !(
           request?.route?.path === '/auth/login' ||
           request?.route?.path === '/user' ||
-          request?.route?.path === '/payment/get'
+          request?.route?.path === '/payment/get' ||
+          request?.route?.path === '/subscription/get'
         )
       ) {
         if (!user[0]?.isPayment) {
